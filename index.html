@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Busan 5Days Trip</title>
+    <title>Busan 5 Days Trip</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -58,16 +58,16 @@
 <body>
 
 <div id="sidebar">
-    <h2>釜山自由行 <span style="font-size: 0.5em; background: #28a745; color: white; padding: 3px 8px; border-radius: 12px;">🟢 雲端同步中</span></h2>
+    <h2>Busan 5 Days Trip <span style="font-size: 0.5em; background: #28a745; color: white; padding: 3px 8px; border-radius: 12px;">🟢 雲端同步中</span></h2>
     
     <div class="section">
         <label>查看日期行程</label>
         <select id="day-select">
-            <option value="day1">第一天 (南浦洞周邊)</option>
-            <option value="day2">第二天 (松島/影島區)</option>
-            <option value="day3">第三天 (海雲台海岸)</option>
-            <option value="day4">第四天 (慶州古都)</option>
-            <option value="day5">第五天 (西面/機場)</option>
+            <option value="day1">Day 1</option>
+            <option value="day2">Day 2</option>
+            <option value="day3">Day 3</option>
+            <option value="day4">Day 4</option>
+            <option value="day5">Day 5</option>
         </select>
         <button style="background:#ff9800" onclick="openAddModal()">➕ 新增景點</button>
     </div>
@@ -136,8 +136,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 <script>
-    // ⚠️ Firebase 設定：目前仍是你原本的 Shanghai 專案
-    // 如果想要完全切分資料，建議去 Firebase 開一個新專案並替換以下 Config
     const firebaseConfig = {
         apiKey: "AIzaSyASaqpzdwA4e6TvBIzuTa50FZPb8pB0UMs",
         authDomain: "shanghai-873b7.firebaseapp.com",
@@ -152,14 +150,11 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // 🌟 資料庫路徑修改：從 jiangnan 改為 busan，避免覆蓋你之前的江南行程！
     const tripRef = db.ref('trips/busan');
 
-    // 🌟 初始化地圖：將中心點改為釜山 (西面附近)
     const map = L.map('map').setView([35.154, 129.059], 12);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
     
-    // 🌟 放寬地圖邊界：涵蓋釜山至慶州 (南至釜山影島，北至慶州，西至金海機場，東至海雲台)
     const bounds = [[34.8, 128.5], [36.0, 129.6]];
     map.setMaxBounds(bounds);
 
@@ -171,7 +166,6 @@
     let markerLayer = L.layerGroup().addTo(map);
     let photoLayer = L.layerGroup().addTo(map);
 
-    // 啟動拖曳排序功能
     const listElement = document.getElementById('marker-list');
     Sortable.create(listElement, {
         handle: '.drag-handle',
@@ -230,7 +224,6 @@
 
     function closeAddModal() { document.getElementById('add-modal').style.display = 'none'; }
 
-    // 🌟 智慧多城市搜尋邏輯
     async function searchPlace() {
         const query = document.getElementById('search-input').value;
         const city = document.getElementById('search-city').value;
@@ -240,7 +233,6 @@
         resContainer.innerHTML = '<span style="color:#666; padding:5px; font-size:0.9em;">搜尋中...</span>';
 
         try {
-            // 如果有選城市，就把城市加在關鍵字前面；如果是全域 (空字串)，就直接用關鍵字
             const searchQuery = city ? `${city} ${query}` : query;
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=5`;
             
@@ -296,7 +288,6 @@
         lineLayer.clearLayers(); markerLayer.clearLayers(); photoLayer.clearLayers();
         const listContainer = document.getElementById('marker-list'); listContainer.innerHTML = '';
 
-        // 地圖視角自動置中 (涵蓋當天所有點)
         const latlngs = localState.map(p => p.latlng);
         if (latlngs.length > 0) {
             map.fitBounds(L.latLngBounds(latlngs), { padding: [30, 30], maxZoom: 14 });
